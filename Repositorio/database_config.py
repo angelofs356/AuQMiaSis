@@ -1,6 +1,6 @@
 """
 Autor: Angelo Francisco da Silva
-Data: 02/07/2026
+Data: 03/07/2026
 Projeto: AuQMiaSis
 """
 
@@ -13,20 +13,25 @@ def get_connection_cached():
     return obter_conexao()
 
 def obter_conexao():
-    """
-    Centraliza a conexão com o banco de dados PostgreSQL (Supabase)
-    usando os parâmetros do st.secrets.
-    """
     try:
+        # Acessa o dicionário de configurações
         db = st.secrets["database"]
-        senha_segura = quote_plus(db["password"])
         
-        # Monta a URI usando as variáveis do arquivo secrets
-        DB_URI = f"postgresql://{db['user']}:{senha_segura}@{db['host']}:{db['port']}/{db['dbname']}"
+        # Extrai e limpa os dados
+        user = str(db["user"]).strip()
+        pwd = quote_plus(str(db["password"]).strip())
+        host = str(db["host"]).strip()
+        port = str(db["port"]).strip()
+        dbname = str(db["dbname"]).strip()
         
-        return psycopg2.connect(DB_URI)
+        # Monta a URI
+        DB_URI = f"postgresql://{user}:{pwd}@{host}:{port}/{dbname}"
+        
+        # Tenta conectar
+        conn = psycopg2.connect(DB_URI, connect_timeout=10)
+        return conn
+        
     except Exception as e:
-        st.error(f"Erro crítico ao conectar ao banco de dados: {e}")
+        # Isso vai aparecer na tela do seu celular se der erro
+        st.error(f"Erro ao conectar: {type(e).__name__} - {e}")
         return None
-
-        
