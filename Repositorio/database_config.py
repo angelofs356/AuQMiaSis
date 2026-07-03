@@ -14,13 +14,16 @@ def get_connection_cached():
 
 def obter_conexao():
     """
-    Centraliza a conexão com o banco de dados PostgreSQL (Supabase).
-    Busca a senha de forma segura a partir do st.secrets.
+    Centraliza a conexão com o banco de dados PostgreSQL (Supabase)
+    usando os parâmetros do st.secrets.
     """
     try:
-        senha_pura = st.secrets["database"]["password"]
-        senha_segura = quote_plus(senha_pura)
-        DB_URI = f"postgresql://postgres:{senha_segura}@db.zpnxtrmbpnenuulidrwl.supabase.co:5432/postgres"
+        db = st.secrets["database"]
+        senha_segura = quote_plus(db["password"])
+        
+        # Monta a URI usando as variáveis do arquivo secrets
+        DB_URI = f"postgresql://{db['user']}:{senha_segura}@{db['host']}:{db['port']}/{db['dbname']}"
+        
         return psycopg2.connect(DB_URI)
     except Exception as e:
         st.error(f"Erro crítico ao conectar ao banco de dados: {e}")
