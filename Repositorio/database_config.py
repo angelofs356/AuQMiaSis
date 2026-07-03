@@ -14,24 +14,19 @@ def get_connection_cached():
 
 def obter_conexao():
     try:
-        # Acessa o dicionário de configurações
         db = st.secrets["database"]
         
-        # Extrai e limpa os dados
-        user = str(db["user"]).strip()
-        pwd = quote_plus(str(db["password"]).strip())
-        host = str(db["host"]).strip()
-        port = str(db["port"]).strip()
-        dbname = str(db["dbname"]).strip()
-        
-        # Monta a URI
-        DB_URI = f"postgresql://{user}:{pwd}@{host}:{port}/{dbname}"
-        
-        # Tenta conectar
-        conn = psycopg2.connect(DB_URI, connect_timeout=10)
+        # Conexão usando parâmetros individuais (mais estável que URI)
+        conn = psycopg2.connect(
+            dbname=db["dbname"].strip(),
+            user=db["user"].strip(),
+            password=db["password"].strip(),
+            host=db["host"].strip(),
+            port=db["port"].strip(),
+            connect_timeout=10
+        )
         return conn
         
     except Exception as e:
-        # Isso vai aparecer na tela do seu celular se der erro
-        st.error(f"Erro ao conectar: {type(e).__name__} - {e}")
+        st.error(f"Erro ao conectar: {e}")
         return None
