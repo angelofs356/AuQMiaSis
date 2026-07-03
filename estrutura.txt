@@ -1,0 +1,73 @@
+Listagem de caminhos de pasta para o volume Arquivos
+O número de série do volume é 000000AD D84B:DD51
+E:.
+|   AuQMiaSis.code-workspace
+|   estrutura.txt
+|   
++---.pytest_cache
+|   |   .gitignore
+|   |   CACHEDIR.TAG
+|   |   README.md
+|   |   
+|   \---v
+|       \---cache
+|               lastfailed
+|               nodeids
+|               
++---.vscode
+|       settings.json
+|       
++---Base
++---Documentação
+|       Estrutura.docx
+|       ?? Guia de Configuração.docx
+|       
+\---Repositorio
+    |   app.py
+    |   conftest.py
+    |   database_config.py
+    |   requirements.txt
+    |   
+    +---.pytest_cache
+    |   |   .gitignore
+    |   |   CACHEDIR.TAG
+    |   |   README.md
+    |   |   
+    |   \---v
+    |       \---cache
+    |               lastfailed
+    |               nodeids
+    |               
+    +---.streamlit
+    |       secrets.toml
+    |       
+    +---dtos
+    |   |   usuarios_dto.py
+    |   |   __init__.py
+    |   |   
+    |   \---__pycache__
+    |           usuarios_dto.cpython-312.pyc
+    |           __init__.cpython-312.pyc
+    |           
+    +---models
+    |   |   __init__.py
+    |   |   
+    |   +---models
+    |   |       usuarios_model.py
+    |   |       
+    |   \---__pycache__
+    |           __init__.cpython-312.pyc
+    |           
+    +---modulos
+    |   \---usuarios
+    |       |   test_usuarios.py
+    |       |   usuarios_controller.py
+    |       |   usuarios_view.py
+    |       |   
+    |       \---__pycache__
+    |               test_usuarios.cpython-312-pytest-9.1.1.pyc
+    |               usuarios_controller.cpython-312.pyc
+    |               
+    \---__pycache__
+            conftest.cpython-312-pytest-9.1.1.pyc
+            
