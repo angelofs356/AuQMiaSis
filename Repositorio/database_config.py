@@ -16,17 +16,17 @@ def obter_conexao():
     try:
         db = st.secrets["database"]
         
-        # Conexão usando parâmetros individuais (mais estável que URI)
+        # Conectando usando dicionário de argumentos (mais robusto)
         conn = psycopg2.connect(
-            dbname=db["dbname"].strip(),
-            user=db["user"].strip(),
-            password=db["password"].strip(),
-            host=db["host"].strip(),
-            port=db["port"].strip(),
+            host=db["host"],
+            database=db["dbname"],
+            user=db["user"],
+            password=db["password"],
+            port=db["port"],
+            sslmode="require", # O Supabase EXIGE SSL
             connect_timeout=10
         )
         return conn
-        
     except Exception as e:
         st.error(f"Erro ao conectar: {e}")
         return None
