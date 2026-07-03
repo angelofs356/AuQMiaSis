@@ -8,6 +8,10 @@ import psycopg2
 import streamlit as st
 from urllib.parse import quote_plus
 
+@st.cache_resource
+def get_connection_cached():
+    return obter_conexao()
+
 def obter_conexao():
     """
     Centraliza a conexão com o banco de dados PostgreSQL (Supabase).
@@ -21,3 +25,5 @@ def obter_conexao():
     except Exception as e:
         st.error(f"Erro crítico ao conectar ao banco de dados: {e}")
         return None
+
+        
