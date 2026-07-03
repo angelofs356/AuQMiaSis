@@ -14,19 +14,20 @@ def get_connection_cached():
 
 def obter_conexao():
     try:
+        # Acessa as configurações que você colocou no Secrets
         db = st.secrets["database"]
         
-        # Conectando usando dicionário de argumentos (mais robusto)
+        # Conecta via porta 6543 (Transaction Mode)
         conn = psycopg2.connect(
             host=db["host"],
             database=db["dbname"],
             user=db["user"],
             password=db["password"],
             port=db["port"],
-            sslmode="require", # O Supabase EXIGE SSL
-            connect_timeout=10
+            sslmode="require"
         )
         return conn
     except Exception as e:
-        st.error(f"Erro ao conectar: {e}")
+        # Se falhar, vamos ver exatamente o que é
+        st.error(f"Erro detalhado: {e}")
         return None
