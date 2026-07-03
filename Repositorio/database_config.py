@@ -6,7 +6,6 @@ Projeto: AuQMiaSis
 
 import psycopg2
 import streamlit as st
-from urllib.parse import quote_plus
 
 @st.cache_resource
 def get_connection_cached():
@@ -14,7 +13,7 @@ def get_connection_cached():
 
 def obter_conexao():
     try:
-        # Acessa a URL completa do Aiven
+        # Acessa a URL completa do Aiven definida no secrets.toml
         db_url = st.secrets["database"]["url"]
         
         # Conecta usando a URL direta
