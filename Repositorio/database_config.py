@@ -14,20 +14,12 @@ def get_connection_cached():
 
 def obter_conexao():
     try:
-        # Acessa as configurações que você colocou no Secrets
-        db = st.secrets["database"]
+        # Acessa a URL completa do Aiven
+        db_url = st.secrets["database"]["url"]
         
-        # Conecta via porta 6543 (Transaction Mode)
-        conn = psycopg2.connect(
-            host=db["host"],
-            database=db["dbname"],
-            user=db["user"],
-            password=db["password"],
-            port=db["port"],
-            sslmode="require"
-        )
+        # Conecta usando a URL direta
+        conn = psycopg2.connect(db_url)
         return conn
     except Exception as e:
-        # Se falhar, vamos ver exatamente o que é
-        st.error(f"Erro detalhado: {e}")
+        st.error(f"Erro de conexão com Aiven: {e}")
         return None
