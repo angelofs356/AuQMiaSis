@@ -4,7 +4,7 @@ Data: 03/07/2026
 Projeto: AuQMiaSis
 """
 import streamlit as st
-from .clientes_controller import adicionar_novo_cliente, obter_todos_clientes
+from modulos.clientes.clientes_controller import adicionar_novo_cliente, obter_todos_clientes
 
 def tela_clientes():
     st.title("🐾 Cadastro de Clientes")

@@ -3,8 +3,8 @@ Autor: Angelo Francisco da Silva
 Data: 03/07/2026
 Projeto: AuQMiaSis
 """
-from ...dtos.clientes_dto import ClienteDTO
-from ...models.clientes_model import inserir_cliente, listar_clientes
+from dtos.clientes_dto import ClienteDTO
+from models.clientes_model import inserir_cliente, listar_clientes
 
 def adicionar_novo_cliente(dados):
     try:
