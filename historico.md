@@ -144,3 +144,36 @@ Qualidade e Testes: O arquivo pytest.ini na raiz parametriza o pythonpath = Repo
 
 Ponto de Parada Exato (Próxima Sprint/Tarefa):
 O ambiente de desenvolvimento está estável e funcional em execução local via comando streamlit run Repositorio/app.py. O próximo passo do desenvolvimento consiste em iniciar o Módulo de Cadastro e Consulta de Clientes e Pets, replicando estritamente os padrões modulares, de cabeçalho, arquitetura em camadas e suíte de testes estabelecidos no módulo de usuários.
+
+📝 Resumo das Alterações (04/07/2026)
+Progresso no Sistema "AuQMiaSis":
+
+Refatoração do Sistema de Login e Navegação (app.py):
+
+Implementação de Logo Dinâmica: Adicionada a função exibir_logo() que detecta automaticamente o tema do Streamlit (light ou dark) e carrega o arquivo de imagem correspondente (logo_claro.png ou logo_escuro.png) da pasta img/. A lógica foi protegida com st.empty() e um controle de estado (st.session_state['tema_atual']) para forçar a atualização instantânea da interface ao trocar de tema.
+
+Otimização do Fluxo de Login (Foco e "Enter"): Substituímos a estrutura rígida de st.form por um st.container para obter controle total sobre os eventos do navegador. Injetamos um script JavaScript via st.components.v1.html que:
+
+Define o foco inicial automaticamente no primeiro campo (Usuário).
+
+Intercepta a tecla Enter em campos de texto para navegar para o próximo campo (tabIndex), bloqueando o submit automático e permitindo o envio apenas através do clique explícito no botão "Entrar".
+
+Correção de Erros de Caminho: Ajustamos o carregamento de arquivos estáticos utilizando os.path.abspath(__file__) para garantir que o sistema encontre a logo e outros recursos independentemente de onde o terminal seja aberto.
+
+Estrutura de Módulos:
+
+Validada a estrutura de pacotes com __init__.py em todas as subpastas.
+
+Corrigida a importação de módulos para o formato absoluto (from modulos.clientes... em vez de importações relativas), resolvendo o erro ImportError: attempted relative import beyond top-level package que ocorria ao executar o sistema via python -m streamlit.
+
+Ambiente de Desenvolvimento:
+
+O sistema continua rodando estavelmente a partir da raiz E:\AuQMiaSis com o comando python -m streamlit run Repositorio/app.py.
+
+Próximo Passo (Sprint: Módulo de Clientes e Pets):
+
+O ambiente está configurado e as ferramentas de UI (foco/logo/navegação) estão padronizadas.
+
+Tarefa imediata para a próxima sessão: Iniciar a criação efetiva dos arquivos clientes_dto.py, clientes_model.py, clientes_controller.py e clientes_view.py, seguindo rigorosamente o cabeçalho e a arquitetura MVC+DTO estabelecidos no historico.md.
+
+Dica para amanhã: Ao retomar, você já pode começar criando a estrutura da pasta Repositorio/modulos/clientes/ com os arquivos que esboçamos. O sistema está pronto para receber essa nova funcionalidade sem conflitos!
