@@ -1,45 +1,35 @@
 🐾 DOCUMENTO DE CONTEXTO TÉCNICO E MEMÓRIA DE PROJETO: AuQMiaSis
-Plaintext
 Autor do Projeto: Angelo Francisco da Silva
-Data do Último Marco: 02/07/2026
+
+Data do Último Marco: 03/07/2026
+
 Nome do Projeto: AuQMiaSis (Sistema de Gerenciamento de Banho e Tosa)
+
 Objetivo: Backup de Contexto Absoluto para inicialização e leitura de IA (LLM).
+
 🛠️ 1. ESPECIFICAÇÕES TECNOLÓGICAS, FERRAMENTAS E VERSÕES
-Linguagem Core: Python 3.12 (Versão específica em uso: 3.12.10).
+Linguagem Core: Python 3.12 (Versão: 3.12.10).
 
-Framework de Interface (Front-end): Streamlit.
+Framework (Front-end): Streamlit.
 
-Banco de Dados: PostgreSQL (Hospedado na nuvem via Supabase).
+Banco de Dados: PostgreSQL (Hospedado na nuvem via Aiven).
 
-Provedor de Conexão SQL: psycopg2 (com uso de psycopg2.extras.RealDictCursor).
+Provedor de Conexão SQL: psycopg2.
 
-Validação de Dados e Regras de Negócio: Pydantic v2 (Pydantic Core 2.13).
+Validação de Dados: Pydantic v2.
 
-Framework de Testes Unitários: Pytest (Versão em uso: 9.1.1).
+Framework de Testes: Pytest.
 
-Ambiente de Desenvolvimento (IDE): VS Code (Visual Studio Code) utilizando o Workspace AuQMiaSis.code-workspace.
+🔑 2. INFRAESTRUTURA E CONEXÃO ATUAL (AIVEN)
+Host: pg-1e753199-auqmiasis.c.aivencloud.com
 
-Gerenciador de Banco de Dados Local/Interface: DBeaver Community Edition (Site oficial: dbeaver.io).
+Porta: 19111
 
-🔑 2. INFORMAÇÕES DE INFRAESTRUTURA, SITES E CREDENCIAIS
-Banco de Dados (Supabase)
-Host/Endereço do Servidor: db.zpnxtrmbpnenuulidrwl.supabase.co
+Banco: defaultdb
 
-Porta padrão: 5432
+Usuário: avnadmin
 
-Database (Banco): postgres
-
-Username (Usuário): postgres
-
-Password (Senha Pura): Feda40@14&12acada356
-
-URL de Conexão JDBC (Para uso direto no DBeaver se necessário):
-jdbc:postgresql://db.zpnxtrmbpnenuulidrwl.supabase.co:5432/postgres
-
-Regras de Injeção de Credenciais no Código
-A senha contém caracteres especiais (&). No código Python, ela é extraída estritamente do arquivo local e protegido .streamlit/secrets.toml.
-
-Para evitar falhas no protocolo URI, a senha sofre obrigatoriamente mascaramento utilizando a função urllib.parse.quote_plus antes de compor a string de conexão final (DB_URI).
+Regra de Conexão: A conexão agora é centralizada via string de conexão única (URL) no arquivo .streamlit/secrets.toml, lida pelo database_config.py através da função obter_conexao().
 
 🗂️ 3. MAPEAMENTO COMPLETO DA ARQUITETURA DE DIRETÓRIOS
 A estrutura atual do disco E:\ está organizada exatamente sob o seguinte mapa de pastas:
@@ -84,6 +74,7 @@ E:\AuQMiaSis>
                 usuarios_controller.py # Intermediário de Regras (View <-> DTO/Model)
                 usuarios_view.py       # Interface Streamlit do CRUD de Usuários
                 __init__.py
+
 🗄️ 4. MODELAGEM DO BANCO DE DADOS (10 TABELAS DO ECOSSISTEMA)
 O script contido no inicializador do banco cria automaticamente na nuvem a seguinte estrutura relacional:
 
@@ -107,28 +98,45 @@ pacotes_vendidos: Contratos de pacotes de serviços por cliente. Campos: id (SER
 
 itens_pacote: Controle de sessões dos pacotes. Campos: id (SERIAL PK), pacote_vendido_id (INTEGER), servico_id (INTEGER), qtd_total (INTEGER), qtd_usada (INTEGER).
 
-📝 5. PADRÕES OBRIGATÓRIOS DE DESENVOLVIMENTO
-Cabeçalho de Arquivo
-Todo arquivo de script Python (.py) gerado no projeto deve, obrigatoriamente, iniciar com a seguinte estrutura de Docstring:
+📝 5. PADRÕES ESTRUTURAIS E ARQUITETURA DE DESENVOLVIMENTO
+Padronização de Cabeçalhos: Todos os arquivos .py devem conter obrigatoriamente a docstring de identificação:
 
 Python
 """
 Autor: Angelo Francisco da Silva
-Data: [Inserir data do dia]
+Data: [DD/MM/AAAA]
 Projeto: AuQMiaSis
 """
-Arquitetura de Fluxo de Dados (Padrão MVC + DTO)
-View (*_view.py): Captura as entradas brutas da interface Streamlit e renderiza os componentes visuais de resposta ao usuário. Proibido invocar o banco de dados ou schemas Pydantic direto na View. Ela consome apenas métodos do Controller. Organizada visualmente usando st.tabs dividida em: "🔍 Consultar e Gerenciar" e "➕ Cadastrar Novo".
+Arquitetura em Camadas (MVC + DTO):
 
-Controller (*_controller.py): Intermediário lógico. Recebe os dados da View, repassa ao DTO correspondente para validação e aciona o Model. Captura exceções como ValidationError do Pydantic e as transforma em mensagens amigáveis retornando um dicionário padrão: {"sucesso": bool, "mensagem": str}.
+View (*_view.py): Responsável estrita pela interface Streamlit. Captura entradas e exibe resultados. Não interage diretamente com o banco de dados ou schemas.
 
-DTO (*_dto.py): Schemas baseados em pydantic.BaseModel. Responsável pela limpeza, tipagem estrita e validação de regras de negócio antes de qualquer contato com o banco.
+Controller (*_controller.py): Camada de orquestração. Valida dados via DTO, aciona a lógica do Model e padroniza respostas para a View no formato {"sucesso": bool, "mensagem": str}.
 
-Model (*_model.py): Executa comandos SQL puras via conector, interagindo com as tabelas do Supabase. Recebe e retorna dados tipados via DTOs.
+DTO (*_dto.py): Schemas Pydantic para garantir a integridade, tipagem e higienização dos dados antes da persistência.
+
+Model (*_model.py): Camada de persistência. Executa comandos SQL puros e gerencia a interface com o banco de dados via psycopg2.
 
 🎯 6. ESTADO ATUAL DO SISTEMA E PRÓXIMO PASSO
+
+Infraestrutura e Conectividade:
+
 Componentes Prontos e Validados:
-Inicialização: O app.py conecta no Supabase com segurança, valida ou cria as 10 tabelas e provê formulário de login funcional. Cria o usuário padrão (admin / admin123) caso a tabela esteja vazia.
+Inicialização: O app.py conecta no Aiven com segurança, valida ou cria as 10 tabelas e provê formulário de login funcional. Cria o usuário padrão (admin / admin123) caso a tabela esteja vazia.
+
+Centralização de Conexão: A lógica de conexão foi refatorada para o módulo database_config.py. Toda a aplicação utiliza agora a função obter_conexao(), que lê uma única string de conexão (url) a partir do secrets.toml.
+
+Segurança: Credenciais sensíveis são protegidas pelo .gitignore e não existem mais strings de conexão "hardcoded" ou montadas manualmente nos arquivos de lógica (app.py), eliminando riscos de vazamento e erros de DNS.
+
+Componentes Validados:
+
+Sistema Maestro (app.py): Fluxo de inicialização do banco (criação das 10 tabelas), login e controle de sessão validados.
+
+Módulo de Usuários: CRUD completo funcional (View, Controller, DTO, Model) e coberto por 4 testes unitários (pytest) com 100% de sucesso.
+
+Próxima Sprint (Roadmap):
+
+Módulo de Clientes e Pets: Iniciar a implementação replicando o padrão MVC+DTO e os protocolos de segurança estabelecidos. A suíte de testes deve ser expandida para cobrir as novas regras de negócio deste módulo.
 
 Módulo de Usuários: Camadas DTO, Model, Controller e View totalmente criadas, integradas e acopladas ao menu do arquivo maestro.
 

@@ -7,6 +7,7 @@ Projeto: AuQMiaSis
 import streamlit as st
 from database_config import obter_conexao
 from modulos.usuarios.usuarios_view import tela_usuarios
+from modulos.clientes.clientes_view import tela_clientes
 
 # 1. FUNÇÃO PARA INICIALIZAR TABELAS
 def inicializar_banco():
@@ -86,4 +87,4 @@ else:
     elif menu_opcao == "Usuários":
         tela_usuarios()
     elif menu_opcao == "Clientes e Pets":
-        st.title("🐾 Cadastro de Clientes e Pets")
+        tela_clientes()
